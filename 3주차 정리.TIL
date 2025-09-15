@@ -64,5 +64,13 @@ print(5 + 3);  // 8
  print(15 / 3); // 5
  print(17 % 5); // 2
 
+void main() {
+  var author = "개발하는남자";
+  print(author.runtimeType);
+  print(author);
+  author = '아무개';
+  print(author);
+}
+
 
 
