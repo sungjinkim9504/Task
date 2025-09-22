@@ -1,0 +1,25 @@
+void main() {
+  String name = '디모이';
+  String name2 = "디모이";
+  String name3 = "디" + "모" + "이";
+  // Fixed: Triple single quote string literal was not properly closed.
+  String name4 = '''
+  디모이
+  김성진
+  ''';
+  // Fixed: Assignment operator (=) was missing and triple double quote string literal was not properly closed.
+  String name5 = """
+  디모이
+  김성진
+  """;
+
+  var result = 2.toString() + " * " + 4.toString() + (2 * 4).toString();
+  print(result);
+
+  // Fixed: Variables x and y were not defined.
+  int x = 2;
+  int y = 4;
+
+  result = "$x + $y = ${x * y}";
+  print(result);
+}
