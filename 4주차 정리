@@ -23,3 +23,11 @@ void main() {
   result = "$x + $y = ${x * y}";
   print(result);
 }
+
+
+void main() {
+  var nums = List.generate(10, (index) => index + 1);
+  print(nums);
+  var strs = List.generate(10, (index) => "values$index");
+  print(strs);
+}
