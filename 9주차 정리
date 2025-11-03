@@ -1,0 +1,129 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: DynamicGridPage(), // 상태가 있는 위젯을 홈으로 설정
+    );
+  }
+}
+
+// 'StatefulWidget' 선언 (n값이 바뀌어야 하므로)
+class DynamicGridPage extends StatefulWidget {
+  @override
+  _DynamicGridPageState createState() => _DynamicGridPageState();
+}
+
+// 'StatefulWidget'의 실제 상태(데이터)와 화면(UI)을 관리하는 클래스
+class _DynamicGridPageState extends State<DynamicGridPage> {
+  // 1. 상태 변수 선언
+  // 사용자가 선택할 n값. Sliders는 double(실수)을 기본으로 사용합니다.
+  // 기본값을 9로 설정.
+  double _currentN = 9.0;
+  
+  // 작은 박스 하나의 크기 (고정값)
+  final double _boxSize = 20.0;
+
+  @override
+  Widget build(BuildContext context) {
+    // 2. n값을 정수로 변환 (격자 크기는 정수여야 하므로)
+    final int n = _currentN.toInt();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("n값을 입력받아 박스 그리기"),
+        backgroundColor: Colors.blueGrey,
+      ),
+      // 스크롤이 가능하게 하여 n값이 커져도 화면에 다 보이도록 함
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // 3. 사용자 입력 (Slider) 부분
+                Text(
+                  "격자 크기 n (1~20): $n", // 현재 n값 표시
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Slider(
+                  value: _currentN, // 현재 값 (state 변수)
+                  min: 1.0,         // 최소값
+                  max: 20.0,        // 최대값
+                  divisions: 19,    // (최대값-최소값) = 19. 1~20 사이의 정수만 선택되도록 함
+                  label: n.toString(), // 슬라이더를 잡았을 때 표시되는 숫자
+                  
+                  // 4. 값이 변경될 때 호출되는 함수
+                  onChanged: (double newValue) {
+                    // setState() : 이 함수 안에서 값을 변경해야 화면이 새로 그려집니다.
+                    setState(() {
+                      _currentN = newValue; // state 변수(_currentN)를 새 값으로 업데이트
+                    });
+                  },
+                ),
+
+                SizedBox(height: 20), // 입력 UI와 격자 사이의 간격
+
+                // 5. n값을 기반으로 'X + ㅁ' 격자를 그리는 부분
+                _buildGrid(n),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // n값을 받아서 격자를 그리는 함수
+  Widget _buildGrid(int gridSize) {
+    // gridSize가 0이면(n=1일 때 gridSize-1이 0이 됨) 오류가 날 수 있으므로 최소 1을 보장
+    if (gridSize < 1) return Container(); 
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(gridSize, (rowIndex) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(gridSize, (colIndex) {
+            
+            // "X"자 대각선 조건
+            bool mainDiagonal = (rowIndex == colIndex);
+            bool antiDiagonal = (rowIndex + colIndex == (gridSize - 1));
+            
+            // "ㅁ"자 테두리 조건
+            bool isTopBorder = (rowIndex == 0);
+            bool isBottomBorder = (rowIndex == (gridSize - 1));
+            bool isLeftBorder = (colIndex == 0);
+            bool isRightBorder = (colIndex == (gridSize - 1));
+
+            bool isBorder = isTopBorder || isBottomBorder || isLeftBorder || isRightBorder;
+
+            // 최종 조건: 대각선이거나 또는 테두리이면 파란색
+            bool isBlue = mainDiagonal || antiDiagonal || isBorder;
+            
+            return _buildSmallBox(isBlue);
+          }),
+        );
+      }),
+    );
+  }
+
+  // 작은 박스(네모) 1개를 그리는 함수 (동일)
+  Widget _buildSmallBox(bool isBlue) {
+    return Container(
+      width: _boxSize, // 위에서 정한 박스 크기
+      height: _boxSize,
+      decoration: BoxDecoration(
+        color: isBlue ? Colors.blue : Colors.grey[200],
+        border: Border.all(color: Colors.white, width: 0.5),
+      ),
+    );
+  }
+}
