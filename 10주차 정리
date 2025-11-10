@@ -1,0 +1,117 @@
+class User {
+  final String _name;
+  final int _age;
+
+  String get name => _name;
+  int get age => _age;
+
+  const User(this._name, this._age);
+}
+
+void main() {
+  const user = User("홍길동", 25);
+  // user.age = 20; // ❌ 오류: final 필드는 수정할 수 없습니다.
+
+  print("${user.name}, ${user.age}");
+}
+// 캡슐화 
+
+
+
+
+
+
+
+
+
+
+
+다형
+
+// 부모 클래스
+
+class Animal {
+  String _name = "";
+  String get name => _name;
+  
+  Animal(this._name);
+  
+  void makeSound() {
+    print("$name이 (가) 소리를 내고 있어요!");
+  }
+}
+
+// 자식 클래스
+class Dog extends Animal {
+  Dog(String name) : super(name);
+  
+  @override
+  void makeSound() {
+    print("$name: 월월!");
+  }
+}
+
+class Cat extends Animal {
+  Cat(String name) : super(name);
+  
+  @override
+  void makeSound() {
+    print("$name: 냐옹!");
+  }
+}
+
+
+void main() {
+  Dog dog = Dog("바둑이");
+  Cat cat = Cat("냥이");
+  
+  List<Animal> animals = [dog, cat];
+  for (var animal in animals) {
+    animal.makeSound();
+  }
+}
+
+
+
+
+
+
+// 추상 클래스
+abstract class Animal {
+  final String _name;
+  String get name => _name;
+
+  Animal(this._name);
+
+  // 추상 메서드
+  void makeSound();
+}
+
+// 자식 클래스
+class Dog extends Animal {
+  Dog(String name) : super(name);
+
+  @override
+  void makeSound() {
+    print("$name: 월월!");
+  }
+}
+
+class Cat extends Animal {
+  Cat(String name) : super(name);
+
+  @override
+  void makeSound() {
+    print("$name: 냐옹!");
+  }
+}
+
+void main() {
+  Dog dog = Dog("바둑이");
+  Cat cat = Cat("냥이");
+
+  List<Animal> animals = [dog, cat];
+  for (var animal in animals) {
+    animal.makeSound();
+  }
+}
